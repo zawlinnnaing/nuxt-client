@@ -1,6 +1,6 @@
 # nuxt-client
 
-> A simple authentication nuxt project
+> A simple blog nuxt project
 
 ## Build Setup
 
