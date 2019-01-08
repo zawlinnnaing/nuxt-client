@@ -4,7 +4,7 @@
           :key="post.id"
           :post="post"
     ></post>
-    <paginator></paginator>
+    <paginator v-if="totalPage > 0"></paginator>
   </div>
 </template>
 
@@ -23,12 +23,20 @@
     components: {Paginator, Post},
     middleware: ['auth', 'activeUser'],
     computed: {
+      totalPage() {
+        return this.$store.state.pagination.totalPage;
+      },
+      currentPage() {
+        return this.$store.state.pagination.currentPage;
+      },
       posts() {
-        return this.$store.state.posts.posts;
+        return this.$store.getters['posts/getPosts'](this.currentPage);
       }
     },
     fetch({store, app}) {
       let url = store.state.auth.user.id + '/post';
+
+      // Heat up posts array in store.state
       return app.$axios({
         method: 'get',
         url: url,

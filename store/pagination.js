@@ -41,7 +41,7 @@ export const actions = {
     context.commit('setNextPageUrl', data.links.next);
     context.commit('setPrevPageUrl', data.links.prev);
     context.commit('setTotalPage', data.meta.last_page);
-    context.commit('posts/setPosts', data.data, {root: true});
+    context.commit('posts/setPosts', data, {root: true});
   },
 
   async fetchNextOrPrev(context, payload) {

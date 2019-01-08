@@ -32,7 +32,6 @@
         return this.$store.state.pagination.prevPageUrl;
       },
       currentPage() {
-
         return this.$store.state.pagination.currentPage;
       },
       totalPage() {
@@ -46,7 +45,11 @@
           page: page,
           token: this.$auth.getToken('local')
         };
-        this.$store.dispatch('pagination/fetchPosts', payload);
+        if (this.$store.getters['posts/hasPosts'](page)) {
+          this.$store.commit('pagination/setCurrentPage', page);
+        } else {
+          this.$store.dispatch('pagination/fetchPosts', payload);
+        }
       },
       goToNextOrPrev(url) {
         let payload = {
