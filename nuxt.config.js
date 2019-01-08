@@ -23,7 +23,7 @@ module.exports = {
 
   css: ['~assets/main.css','./node_modules/bulma/css/bulma.css'],
 
-  plugins: ['~/plugins/mixins/user.js','~/plugins/vee-validate.js'],
+  plugins: ['~/plugins/mixins/user.js','~/plugins/vee-validate.js','~/plugins/axios.js'],
   modules: ['@nuxtjs/auth', '@nuxtjs/axios'],
 
   axios: {
