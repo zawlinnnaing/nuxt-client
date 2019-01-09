@@ -105,7 +105,7 @@
           try {
             await this.$axios.post('register', this.userForm);
             await this.$auth.loginWith('local', {data: this.userForm});
-            this.$router.push({name: 'index'});
+            this.$router.go(-1);
           } catch (response) {
             if ('errors' in response) {
               let errors = response.data.errors;

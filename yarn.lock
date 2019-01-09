@@ -1341,7 +1341,7 @@ axios-retry@^3.1.1:
   dependencies:
     is-retry-allowed "^1.1.0"
 
-axios@^0.18.0:
+axios@^0.18.0, axios@latest:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
   integrity sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=
@@ -3903,6 +3903,11 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
+
+javascript-time-ago@^1.0.34:
+  version "1.0.34"
+  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-1.0.34.tgz#9796be7869064a976414dcdcdb1ae532947e0dc3"
+  integrity sha512-GNydyVlrrKOhceFiHGImHi2F2D+9YuZKwsUMO9s5MP2V4RmNxg0nQys68KQk4l2zTYNpsvGe7Iuq4Q6vz2xjeQ==
 
 js-cookie@^2.2.0:
   version "2.2.0"

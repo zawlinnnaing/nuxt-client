@@ -5,7 +5,8 @@
           :post="post"
     ></post>
     <paginator v-if="totalPage > 1"
-               :isAllPosts=true></paginator>
+               :isAllPosts=false
+    ></paginator>
   </div>
 </template>
 
@@ -15,14 +16,14 @@
   import Paginator from "../layouts/partials/paginator";
 
   export default {
-    name: 'Index',
     head: {
-      title: 'Home',
+      title: 'Your Posts',
       meta: [{
-        content: 'Simple nuxt application by Zaw Linn Naing'
+        content: 'All your posts are here'
       }]
     },
     components: {Paginator, Post},
+    middleware: ['auth', 'activeUser'],
     computed: {
       posts() {
         return this.$store.state.posts.posts;
@@ -32,7 +33,7 @@
       }
     },
     fetch({store, app}) {
-      let url = 'posts';
+      let url = store.state.auth.user.id + '/post';
       return app.$axios({
         method: 'get',
         url: url,

@@ -1,4 +1,4 @@
-import axios from "../plugins/axios";
+import axios from "axios";
 
 export const state = () => ({
   posts: [],
@@ -15,15 +15,20 @@ export const mutations = {
 export const actions = {
   async fetchPost(context, payload) {
     console.log('userId :' + payload.user_id + 'postId: ' + payload.post_id);
-    let url = '/post/' + payload.post_id;
+    let url = 'http://localhost:8000/api/v1/auth/post/' + payload.post_id;
     let header = {
       Authorization: payload.token
     };
-    let {data} = await axios({
-      method: 'get',
-      url: url,
-      headers: header
-    });
-    context.commit('setPost', data);
+    try {
+      let {data} = await axios({
+        method: 'get',
+        url: url,
+        headers: header
+      });
+      context.commit('setPost', data);
+    } catch (e) {
+      console.log(e.response);
+    }
+
   }
 };

@@ -19,6 +19,7 @@
 <script>
   export default {
     name: "paginator",
+    props: ['isAllPosts'],
     data() {
       return {
         forceReRender: true
@@ -41,12 +42,16 @@
     },
     methods: {
       goToPage(page) {
-        let payload = {
-          userId: this.$store.state.auth.user.id,
-          page: page,
-          token: this.$auth.getToken('local')
-        };
-        this.$store.dispatch('pagination/fetchPosts', payload);
+        if (this.isAllPosts) {
+          this.$store.dispatch('pagination/fetchAllPosts', page);
+        } else {
+          let payload = {
+            userId: this.$store.state.auth.user.id,
+            page: page,
+            token: this.$auth.getToken('local')
+          };
+          this.$store.dispatch('pagination/fetchPosts', payload);
+        }
       },
       goToNextOrPrev(url) {
         let payload = {

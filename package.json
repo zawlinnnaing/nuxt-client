@@ -15,13 +15,14 @@
   "dependencies": {
     "@nuxtjs/auth": "^4.5.3",
     "@nuxtjs/axios": "^5.3.6",
+    "axios": "latest",
     "bulma": "^0.7.2",
+    "javascript-time-ago": "^1.0.34",
     "nuxt": "^2.0.0",
     "nuxt-validate": "^0.1.2",
     "vee-validate": "^2.1.5",
     "vue": "latest",
-    "vuex": "latest",
-    "axios": "latest"
+    "vuex": "latest"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

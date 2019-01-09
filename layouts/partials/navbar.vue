@@ -29,7 +29,12 @@
           class="navbar-item">
           Home
         </nuxt-link>
-
+        <nuxt-link
+          v-if="loggedIn"
+          :to="{name: 'posts'}"
+          class="navbar-item">
+          Your posts
+        </nuxt-link>
         <nuxt-link
           to="/about"
           class="navbar-item">
@@ -79,7 +84,7 @@
         let self = this;
         this.$auth.logout()
           .then(() => {
-            self.$router.push({name: 'login'})
+            self.$router.go();
           })
       }
     }
@@ -127,7 +132,8 @@
     height: 5rem;
     width: auto;
   }
-  div.navbar-menu{
+
+  div.navbar-menu {
     background-color: #757575;
   }
 </style>

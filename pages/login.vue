@@ -55,6 +55,7 @@
 </template>
 
 <script>
+
   export default {
     name: 'Login',
     head: {
@@ -86,7 +87,7 @@
           this.hasError = true
         }
         this.$axios.defaults.headers.common['Authorization'] = this.$auth.getToken('local');
-        this.$router.push({name: 'index'})
+        this.$router.go(-1);
       }
     }
   }

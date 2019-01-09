@@ -13,7 +13,8 @@ module.exports = {
       {src: '/js/index.js'}
     ],
     link: [
-      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}
+      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
+      {rel: 'stylesheet' , href: 'https://use.fontawesome.com/releases/v5.6.3/css/all.css'}
     ]
   },
   /*
@@ -21,9 +22,9 @@ module.exports = {
   */
   loading: {color: '#3B8070'},
 
-  css: ['~assets/main.css','./node_modules/bulma/css/bulma.css'],
+  css: ['~assets/main.css', './node_modules/bulma/css/bulma.css'],
 
-  plugins: ['~/plugins/mixins/user.js','~/plugins/vee-validate.js','~/plugins/axios.js'],
+  plugins: ['~/plugins/mixins/user.js', '~/plugins/vee-validate.js','~/plugins/calcDateDiff.js'],
   modules: ['@nuxtjs/auth', '@nuxtjs/axios'],
 
   axios: {

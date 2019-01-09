@@ -2,12 +2,13 @@
   <article class="media comment">
     <div class="media-content">
       <div class="content">
+        <div class="author-info">
+          <strong>{{comment.commented_by}}</strong>
+          <small> {{ '<' + comment.user_email + '>' }}</small>
+        </div>
+        <br>
         <p>
-          <strong>John Smith</strong>
-          <small>@johnsmith</small>
-          <br>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor
-          vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.
+          {{ comment.description }}
         </p>
       </div>
       <nav class="level is-mobile">
@@ -21,6 +22,7 @@
           <a class="level-item">
             <span class="icon is-small"><i class="fas fa-heart"></i></span>
           </a>
+          <small class="moment-ago"> {{ momentAgo }}</small>
         </div>
       </nav>
     </div>
@@ -29,10 +31,21 @@
 
 <script>
   export default {
-    name: "comment"
+    name: "comment",
+    props: ['comment'],
+    data() {
+      return {
+        momentAgo: this.$momentAgo(this.comment.created_at)
+      }
+    },
+    created() {
+    },
   }
 </script>
 
 <style scoped>
+  .moment-ago {
+
+  }
 
 </style>
