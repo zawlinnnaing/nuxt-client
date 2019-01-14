@@ -36,6 +36,12 @@
           Your posts
         </nuxt-link>
         <nuxt-link
+          :to="{name: 'post-create_post'}"
+          class="navbar-item"
+          v-if="loggedIn">
+          Write a post
+        </nuxt-link>
+        <nuxt-link
           to="/about"
           class="navbar-item">
           About

@@ -8,5 +8,5 @@ export const getters = {
   isActive(state) {
     console.log(state.user.active);
     return state.user.active;
-  }
+  },
 };

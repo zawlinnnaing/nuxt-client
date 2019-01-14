@@ -2,15 +2,13 @@
   <div class="comment-form">
     <div class="field">
       <div class="control">
-        <label>
-          <textarea rows="5" placeholder="Enter your comment"
-                    :class="{'textarea': true, 'is-danger': errors.has('comment')}"
-                    name="comment"
-                    v-model="comment"
-                    v-validate="'required'"
-          ></textarea>
-        </label>
-        <p class="help is-danger">{{ errors.first('comment') }}</p>
+        <div
+          :class="{'quill-editor': true,'textarea': true , 'div-editor': true}"
+          name="comment"
+          v-model="comment"
+          v-quill:myQuillEditor="editorOption"
+        ></div>
+        <p class="help is-danger">{{ errorMsg }}</p>
         <p class="help is-success" v-if="isSuccess">Comment posted successfully </p>
       </div>
     </div>
@@ -21,26 +19,57 @@
 </template>
 
 <script>
+  import  Validator from 'validatorjs'
   export default {
     name: "CommentForm",
     props: ['userId'],
     data() {
       return {
         comment: '',
-        isSuccess: false
+        isSuccess: false,
+        hasError: false,
+        errorMsg: '',
+        editorOption: {
+          modules: {
+            toolbar: [
+              ['bold', 'italic', 'underline', 'strike'],
+              ['blockquote', 'code-block','link']
+            ]
+          }
+        }
       }
     },
+
     methods: {
       async postComment() {
-        let payload = {
-          user_id: this.userId,
-          description: this.comment,
-          post_id: this.$route.params.id,
-          token: this.$auth.getToken('local')
+        if (this.validateString()) {
+          let payload = {
+            user_id: this.userId,
+            description: this.comment,
+            post_id: this.$route.params.id,
+            token: this.$auth.getToken('local')
+          };
+
+          await this.$store.dispatch('comments/postComment', payload);
+          this.isSuccess = true;
+          setTimeout(this.$router.go(), 1000);
+        }
+      },
+
+      validateString() {
+        let rules = {
+          comment: 'required|min:25'
         };
-        await this.$store.dispatch('comments/postComment', payload);
-        this.isSuccess = true;
-        setTimeout(this.$router.go(), 2000);
+        let validation = new Validator({comment: this.comment}, rules);
+        if (validation.fails()) {
+          this.hasError = true;
+          this.errorMsg = validation.errors.first('comment');
+          return false;
+        } else if (validation.passes()) {
+          this.hasError = false;
+          this.errorMsg = '';
+          return true;
+        }
       }
     }
   }
@@ -53,6 +82,10 @@
 
   div.comment-form {
     margin: 1rem;
+  }
+
+  .div-editor {
+    height: 10rem;
   }
 
 </style>

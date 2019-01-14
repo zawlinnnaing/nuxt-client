@@ -7,9 +7,8 @@
           <small> {{ '<' + comment.user_email + '>' }}</small>
         </div>
         <br>
-        <p>
-          {{ comment.description }}
-        </p>
+        <div v-html="comment.description">
+        </div>
       </div>
       <nav class="level is-mobile">
         <div class="level-left">

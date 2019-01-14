@@ -14,7 +14,7 @@ module.exports = {
     ],
     link: [
       {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
-      {rel: 'stylesheet' , href: 'https://use.fontawesome.com/releases/v5.6.3/css/all.css'}
+      {rel: 'stylesheet', href: 'https://use.fontawesome.com/releases/v5.6.3/css/all.css'}
     ]
   },
   /*
@@ -22,9 +22,15 @@ module.exports = {
   */
   loading: {color: '#3B8070'},
 
-  css: ['~assets/main.css', './node_modules/bulma/css/bulma.css'],
+  css: ['~assets/main.css', './node_modules/bulma/css/bulma.css', 'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css'
+  ],
 
-  plugins: ['~/plugins/mixins/user.js', '~/plugins/vee-validate.js','~/plugins/calcDateDiff.js'],
+  plugins: ['~/plugins/mixins/user.js', '~/plugins/vee-validate.js', '~/plugins/calcDateDiff.js', {
+    src: '~/plugins/nuxt-quill-plugin',
+    ssr: false
+  }],
   modules: ['@nuxtjs/auth', '@nuxtjs/axios'],
 
   axios: {

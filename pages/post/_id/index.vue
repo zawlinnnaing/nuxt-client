@@ -19,7 +19,7 @@
         </section>
         <div v-html="post.body" class="post-content"></div>
         <hr>
-        <div class="comment-section" v-if="comments.length > 0">
+        <div class="comment-section">
           <p class="comment-header">Comment Section</p>
           <comment-form :userId="$auth.user.id" v-if="loggedIn && user.active"></comment-form>
           <div v-else-if="!loggedIn">
@@ -37,10 +37,12 @@
               Please activate your account to post a comment
             </div>
           </div>
-          <comment v-for="comment in comments"
-                   :key="comment.id"
-                   :comment="comment">
-          </comment>
+          <div id="comment-section" v-if="comments.length > 0">
+            <comment v-for="comment in comments"
+                     :key="comment.id"
+                     :comment="comment">
+            </comment>
+          </div>
         </div>
       </div>
     </div>

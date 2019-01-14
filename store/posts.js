@@ -1,5 +1,6 @@
 import axios from "axios";
 
+const baseUrl = 'http://localhost:8000/api/v1/auth/';
 export const state = () => ({
   posts: [],
   post: {}
@@ -14,8 +15,7 @@ export const mutations = {
 };
 export const actions = {
   async fetchPost(context, payload) {
-    console.log('userId :' + payload.user_id + 'postId: ' + payload.post_id);
-    let url = 'http://localhost:8000/api/v1/auth/post/' + payload.post_id;
+    let url = baseUrl + 'post/' + payload.post_id;
     let header = {
       Authorization: payload.token
     };
@@ -29,6 +29,22 @@ export const actions = {
     } catch (e) {
       console.log(e.response);
     }
+  },
 
+  async createPost(context, payload) {
+    let url = baseUrl + payload.user_id + '/post';
+    let header = {
+      Authorization: payload.token
+    };
+    let data = {
+      title: payload.title,
+      body: payload.body
+    };
+    await axios({
+      method: 'post',
+      headers: header,
+      data: data,
+      url: url
+    });
   }
 };
