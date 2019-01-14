@@ -90,7 +90,8 @@
         let self = this;
         this.$auth.logout()
           .then(() => {
-            self.$router.go();
+            self.$router.g
+            o();
           })
       }
     }

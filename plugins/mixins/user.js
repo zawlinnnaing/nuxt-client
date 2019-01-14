@@ -8,7 +8,7 @@ const User = {
         ...mapGetters({
           user: 'auth/user',
           loggedIn: 'auth/loggedIn',
-          token: 'auth/getToken'
+          isActive: 'auth/isActive'
         })
       }
     })

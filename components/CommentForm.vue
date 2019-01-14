@@ -3,11 +3,13 @@
     <div class="field">
       <div class="control">
         <div
-          :class="{'quill-editor': true,'textarea': true , 'div-editor': true}"
+          :class="{'quill-editor': true, 'div-editor': true ,'has-error': hasError}"
           name="comment"
           v-model="comment"
           v-quill:myQuillEditor="editorOption"
         ></div>
+
+        <!------------------------------------- Helping section  ------------------------------------->
         <p class="help is-danger">{{ errorMsg }}</p>
         <p class="help is-success" v-if="isSuccess">Comment posted successfully </p>
       </div>
@@ -19,7 +21,8 @@
 </template>
 
 <script>
-  import  Validator from 'validatorjs'
+  import Validator from 'validatorjs'
+
   export default {
     name: "CommentForm",
     props: ['userId'],
@@ -33,7 +36,7 @@
           modules: {
             toolbar: [
               ['bold', 'italic', 'underline', 'strike'],
-              ['blockquote', 'code-block','link']
+              ['blockquote', 'code-block', 'link']
             ]
           }
         }
@@ -58,7 +61,7 @@
 
       validateString() {
         let rules = {
-          comment: 'required|min:25'
+          comment: 'required'
         };
         let validation = new Validator({comment: this.comment}, rules);
         if (validation.fails()) {
@@ -88,4 +91,7 @@
     height: 10rem;
   }
 
+  .has-error {
+    border: 1px solid #ff3860;
+  }
 </style>

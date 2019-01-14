@@ -46,5 +46,34 @@ export const actions = {
       data: data,
       url: url
     });
+  },
+
+  async updatePost(context, payload) {
+    let url = baseUrl + payload.user_id + '/post/' + payload.post_id;
+    let header = {
+      Authorization: payload.token
+    };
+    let data = {
+      title: payload.title,
+      body: payload.body
+    };
+    await axios({
+      method: 'put',
+      url: url,
+      headers: header,
+      data: data
+    });
+  },
+
+  async deletePost(context, payload) {
+    let url = baseUrl + payload.user_id + '/post/' + payload.post_id;
+    let header = {
+      Authorization: payload.token
+    };
+    await axios({
+      method: 'delete',
+      headers: header,
+      url: url
+    });
   }
 };

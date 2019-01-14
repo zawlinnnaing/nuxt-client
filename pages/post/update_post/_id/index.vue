@@ -1,6 +1,7 @@
 <template>
   <div class="container column is-8">
     <form>
+
       <div class="field">
         <label class="label">Title</label>
         <div class="control">
@@ -18,9 +19,10 @@
       <div class="field">
         <label class="label">Body</label>
         <div class="control">
-          <div :class="{'quill-editor': true, 'div-editor': true , 'has-error': hasError}"
+          <div :class="{'quill-editor': true, 'div-editor': true}"
                v-model="body"
-               v-quill:myQuillEditor="editorOption">
+               v-quill:myQuillEditor="editorOption"
+          >
           </div>
           <p class="help is-danger" v-if="hasError">{{ errorMsg }}</p>
         </div>
@@ -28,7 +30,7 @@
 
       <div class="field">
         <div class="control">
-          <input type="submit" class="button is-info" @click.prevent="createPost()">
+          <input type="submit" class="button is-info" @click.prevent="updatePost()">
         </div>
       </div>
     </form>
@@ -39,30 +41,44 @@
   import Validator from 'validatorjs';
 
   export default {
-    name: "create_post",
+    name: "index",
     head: {
-      title: 'Write a post'
+      title: 'Update post',
+      meta: [
+        {content: 'update your post'}
+      ]
     },
     middleware: ['auth', 'activeUser'],
     data() {
       return {
-        body: '',
-        title: '',
         editorOption: {},
-        hasError: false,
-        errorMsg: ''
+        hasError: true,
+        errorMsg: '',
+        title: '',
+        body: ''
       }
     },
 
     computed: {
-      user_id() {
-        return this.user.id
+      post() {
+        return this.$store.state.posts.post;
+      },
+    },
+    async asyncData({store, app, params}) {
+      let payload = {
+        post_id: params.id,
+        token: app.$auth.getToken('local')
+      };
+      await store.dispatch('posts/fetchPost', payload);
+      return {
+        title: store.state.posts.post.title,
+        body: store.state.posts.post.body
       }
     },
-
     methods: {
-      createPost() {
+      updatePost() {
         let self = this;
+        let post_id = this.$route.params.id;
         this.$validator.validateAll()
           .then((result) => {
             if (result && self.validateString()) {
@@ -70,17 +86,17 @@
                 title: self.title,
                 body: self.body,
                 token: self.$auth.getToken('local'),
-                user_id: self.user_id
+                user_id: self.post.user_id,
+                post_id: post_id
               };
-              self.$store.dispatch('posts/createPost', payload)
+              self.$store.dispatch('posts/updatePost', payload)
                 .then(() => {
-                  self.$router.push({name: 'index'});
+                  self.$router.push({name: 'post-id', params: {id: post_id}});
                 });
             }
           })
       },
       validateString() {
-        console.log('hello fr');
         let rules = {
           body: 'required|min:25'
         };
@@ -102,9 +118,5 @@
 <style scoped>
   div.div-editor {
     height: 15rem;
-  }
-
-  .has-error {
-    border: 1px solid #ff3860;
   }
 </style>
