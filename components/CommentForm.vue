@@ -55,7 +55,10 @@
 
           await this.$store.dispatch('comments/postComment', payload);
           this.isSuccess = true;
-          setTimeout(this.$router.go(), 1000);
+          this.comment = '';
+          setTimeout(() => {
+            this.isSuccess= false
+          }, 2000)
         }
       },
 

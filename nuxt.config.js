@@ -10,7 +10,7 @@ module.exports = {
       {hid: 'description', name: 'description', content: 'A simple authentication nuxt project'}
     ],
     script: [
-      {src: '/js/index.js'}
+      {src: '/js/index.js'},
     ],
     link: [
       {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
@@ -30,7 +30,11 @@ module.exports = {
   plugins: ['~/plugins/mixins/user.js', '~/plugins/vee-validate.js', '~/plugins/calcDateDiff.js', {
     src: '~/plugins/nuxt-quill-plugin',
     ssr: false
-  }],
+  },
+    {
+      src: '~/plugins/echo-client.js',
+      ssr: false
+    }],
   modules: ['@nuxtjs/auth', '@nuxtjs/axios'],
 
   axios: {

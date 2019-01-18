@@ -1,4 +1,3 @@
-
 // Custom Javascript for navbar in mobile
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -9,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if ($navbarBurgers.length > 0) {
 
     // Add a click event on each of them
-    $navbarBurgers.forEach( el => {
+    $navbarBurgers.forEach(el => {
       el.addEventListener('click', () => {
 
         // Get the target from the "data-target" attribute
@@ -23,3 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// Installing socket io
+
+

@@ -24,7 +24,7 @@
         <div v-html="post.body" class="post-content"></div>
 
         <!--Link Section -->
-        <div class="link-section" v-if="isAuthor">
+        <div class="link-section" v-if="loggedIn && isAuthor">
           <nuxt-link :to="{name:'post-update_post-id' , params: {id : post.id }}"
                      class="is-link">Edit Post
           </nuxt-link>
@@ -56,7 +56,7 @@
           </div>
           <div id="comment-section" v-if="comments.length > 0">
 
-            <!------------------------------------- Comment Form  ------------------------------------->
+            <!------------------------------------- Comments  ------------------------------------->
             <comment v-for="comment in comments"
                      :key="comment.id"
                      :comment="comment">
@@ -72,6 +72,7 @@
   import Comment from "@/components/comment";
   import CommentForm from "../../../components/CommentForm";
   import DeletePostModal from "../../../components/DeletePostModal";
+
 
   export default {
     name: "post",
@@ -97,10 +98,15 @@
         showModal: false
       }
     },
-    created() {
-      if (this.user.id === undefined) {
-        return this.$router.push({name: 'index'});
-      }
+    mounted() {
+      // if (this.user === null || this.user === undefined || this.user === '') {
+      //   return this.$router.push({name: 'index'});
+      // }
+      let self = this;
+      this.$echo.channel('Comment-Post' + this.post.id)
+        .listen('CommentPosted', (payload) => {
+          self.$store.dispatch('comments/prependComment', payload.comment);
+        });
     },
     computed: {
       post() {
