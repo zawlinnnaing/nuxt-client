@@ -75,5 +75,14 @@ export const actions = {
       headers: header,
       url: url
     });
+  },
+
+  async fetchGuestUserPosts(context,id) {
+    let url = baseUrl + 'get_posts/' + id;
+    let response = await axios({
+      method: 'get',
+      url: url
+    });
+    context.commit('setPosts',response.data.data);
   }
 };

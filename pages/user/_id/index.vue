@@ -1,185 +1,142 @@
 <template>
-  <div class="container column is-8">
-    <form class="form" enctype="multipart/form-data">
-      <div class="field">
-        <div class="control">
-          <label>Name</label>
-          <input :class="{'input': true , 'is-danger': errors.has('user')}" type="text"
-                 v-validate="'required|max:255'"
-                 v-model="name"
-                 name="user"
-                 required
-          >
-          <p class="help is-danger">{{ errors.first('user') }}</p>
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="control">
-          <label>Email</label>
-          <input type="text"
-                 name="email"
-                 v-model="email"
-                 :class="{'input': true , 'is-danger': errors.has('email') }"
-                 v-validate="'required|email'"
-                 disabled>
-          <p class="help is-danger">{{ errors.first('email') }}</p>
-        </div>
-      </div>
-
-      {{ 'Url' + url }}
-
-      <div class="field">
-        <div class="control">
-          <div class="columns">
-            <div class="column">
-              <div v-if="imageUploaded">
-                <img class="image is-1by1 no-padding-top" :src="image">
-                <p class="help is-danger">{{ errorMsg }}</p>
-              </div>
-              <div v-else-if="img_dir">
-                <img class="image is-1by1 no-padding-top" :src="url + img_dir">
-              </div>
-              <div v-else-if="!img_dir">
-                <img class="image is-1by1 no-padding-top" :src="url + 'default_profile.png'">
-              </div>
-
-            </div>
-            <div class="column">
-              <div class="file-margin-top is-hidden-mobile"></div>
-              <div class="file">
-                <label class="file-label">
-                  <input class="file-input" type="file" name="image" accept="image/*"
-                         @change="importFile($event)">
-                  <span class=" file-cta">
-              <span class="file-icon">
-              <i class="fas fa-upload"></i>
-              </span>
-              <span class="file-label">
-              Choose a file…
-              </span>
-              </span>
-                </label>
-              </div>
-            </div>
+  <div class="container column is-6">
+    <div class="profile-img">
+      <div v-if="other.img_dir">
+        <figure class="image profile" :style="{'background-image': 'url('+profileUrl + other.img_dir+')'} ">
+          <div class="profile-info">
+            <p>{{other.name}}</p>
           </div>
-        </div>
+        </figure>
       </div>
-
-      <div class="field ">
-        <div class="control">
-          <input type="submit"
-                 value="Update"
-                 @click.prevent="updateProfile()"
-                 class="button is-info update-button">
-        </div>
+      <div v-else>
+        <figure class="image profile" :style="{'background-image': 'url('+profileUrl + 'default_profile.png'+')'} ">
+          <div class="profile-info">
+            <p>{{other.name}}</p>
+          </div>
+        </figure>
       </div>
-    </form>
-
-    <div class="field deactivate-field">
-      <div class="control">
-        <label for="password">Deactivate account</label>
-        <small class="help is-warning">Enter password to deactivate account</small>
-        <input type="password"
-               name="password"
-               id="password"
-               placeholder="Password"
-               :class="{'input' : true}">
-        <button @click.prevent=""
-                class="button is-danger button-margin">Deactivate account
-        </button>
+    </div>
+    <div class="social-info">
+      <div class="numbers">
+        <h1 class="title">{{ other.posts_count }}</h1>
+        <h1 class="subtitle">posts</h1>
       </div>
+      <div class="numbers">
+        <h1 class="title">{{ other.followers_count }}</h1>
+        <h1 class="subtitle">followers</h1>
+      </div>
+      <div class="numbers">
+        <h1 class="title">{{other.followed_count}}</h1>
+        <h1 class="subtitle">following</h1>
+      </div>
+    </div>
+    <hr>
+    <div class="latest-posts">
+      <h1 class="title">Latest posts</h1>
+      <post v-for="post in posts"
+            :key="post.id"
+            :post="post"></post>
     </div>
   </div>
 </template>
 
 <script>
+  import Post from "~/components/post";
+
   export default {
-    name: "index",
-    components: {},
-    head: {
-      title: 'Edit your profile',
-      meta: [
-        {hid: 'profile-update-description', name: 'description', content: 'Edit your profile'}
-      ]
-    },
-    // middleware: ['auth', 'isOwner', 'activeUser'],
-    asyncData({store}) {
+    name: "profile",
+    components: {Post},
+    head() {
       return {
-        name: store.state.auth.user.name,
-        email: store.state.auth.user.email,
-        img_dir: store.state.auth.user.img_dir,
-      };
+        title: this.name
+      }
     },
     data() {
       return {
-        file: '',
-        imageUploaded: false,
-        image: '',
-        maximumImageSize: 1000000,
-        errorMsg: '',
-        url: process.env.profileUrl
+        profileUrl: process.env.profileUrl
       }
     },
-    mounted() {
-      console.log(process.env.profileUrl);
-    },
-    methods: {
-      async updateProfile() {
-        let data = {
-          name: this.name,
-          email: this.email,
-          token: this.$auth.getToken('local'),
-          id: this.user.id
-        };
-        if (this.imageUploaded === true) {
-          data.image = this.image;
-          if (this.file.size > this.maximumImageSize) {
-            alert('Your file size is bigger than 1 mb');
-            return;
-          }
-          await this.$store.dispatch('user/updateProfile', data);
-          this.$router.push({name: 'profile'});
-        }
-      },
-      importFile(e) {
-        this.errorMsg = '';
-        let self = this;
-        this.file = e.target.files[0];
-        if (this.file.size > this.maximumImageSize) {
-          this.errorMsg = 'Your file size is bigger than 1 mb'
-        }
-        let reader = new FileReader();
-        reader.onload = function () {
-          self.image = reader.result
-        };
-        reader.readAsDataURL(this.file);
-        this.imageUploaded = true;
+    async asyncData({store, route}) {
+      let id = route.params.id;
+      await store.dispatch('user/getUser', id);
+      await store.dispatch('posts/fetchGuestUserPosts', id);
+      return {
+        other: store.state.user.other,
+        posts: store.state.posts.posts
       }
     }
   }
 </script>
 
 <style scoped>
-  div.file-margin-top {
-    margin-top: 23rem;
+
+  .profile {;
+    background-position: center;
+    background-size: cover;
+    height: 300px;
+    width: 300px;
+    margin: auto !Important;
+    border-radius: 50%;
+    overflow: hidden;
   }
 
-  button.button-margin {
-    margin: 1rem 0;
-  }
-
-  div.deactivate-field {
+  div.profile-img {
     margin: 2rem 0;
+  }
+
+  div.profile-info {
+    position: absolute;
+    top: 80%;
+    height: 100%;
+    width: 100%;
+    padding-top: 0.3rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: #F5F5F5;
+    text-align: center;
+  }
+
+  i.fa-edit {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    color: #F5F5F5;
+  }
+
+  .profile-info:hover i.fa-edit {
+    opacity: 100;
+  }
+
+  div.numbers {
+    text-align: center;
+    width: 100%;
+  }
+
+  div.social-info {
+    margin: 2rem 0 !important;
+  }
+
+  div.social-info div.numbers:first-child {
+    border-right: 1px solid #47494e;
+  }
+
+  div.social-info div.numbers:last-child {
+    border-left: 1px solid #47494e;
+  }
+
+  div.social-info {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  div.follower-section {
     padding: 1rem;
-    background-color: #EEEEEE;
   }
 
-  .update-button {
-    margin-top: 1rem;
+  div.follower-user:last-child {
+    border-bottom: 1px solid white;
   }
 
-  img.no-padding-top {
-    padding-top: 2rem !important;
+  div.detail-info {
+    margin: 2rem 0;
   }
+
 </style>

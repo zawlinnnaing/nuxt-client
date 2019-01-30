@@ -25,7 +25,7 @@ export const mutations = {
 
 export const actions = {
   async fetchPosts(context, payload) {
-    let url = "http://localhost:8000/api/v1/auth/" + payload.userId + "/post?page=" + payload.page;
+    let url = baseUrl + payload.userId + "/post?page=" + payload.page;
     let header = {
       Authorization: payload.token
     };
