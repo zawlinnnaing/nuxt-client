@@ -44,6 +44,7 @@ export const actions = {
   },
 
   async getUser(context, id) {
+    console.log(id);
     let url = baseUrl + 'get_user/' + id;
     let {data} = await axios({
       method: 'get',

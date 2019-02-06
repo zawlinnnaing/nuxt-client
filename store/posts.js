@@ -77,12 +77,28 @@ export const actions = {
     });
   },
 
-  async fetchGuestUserPosts(context,id) {
+  async fetchGuestUserPosts(context, id) {
     let url = baseUrl + 'get_posts/' + id;
     let response = await axios({
       method: 'get',
       url: url
     });
-    context.commit('setPosts',response.data.data);
+    context.commit('setPosts', response.data.data);
+  },
+  async uploadPostImage(context, payload) {
+    let url = process.env.baseApiUrl + 'post_image';
+    let header = {
+      Authorization: payload.token
+    };
+    let data = {
+      'image' : payload.image
+    };
+    let response = await axios({
+      method: 'post',
+      url: url,
+      headers: header,
+      data: data
+    });
+    return response.data.imgUrl;
   }
 };

@@ -31,11 +31,14 @@
       </div>
     </div>
     <hr>
-    <div class="latest-posts">
+    <div v-if="other.posts_count > 0" class="latest-posts">
       <h1 class="title">Latest posts</h1>
       <post v-for="post in posts"
             :key="post.id"
             :post="post"></post>
+    </div>
+    <div class="latest-posts" v-else>
+      <h1 class="subtitle"> This user has no posts yet. </h1>
     </div>
   </div>
 </template>
@@ -48,7 +51,7 @@
     components: {Post},
     head() {
       return {
-        title: this.name
+        title: this.other.name
       }
     },
     data() {
@@ -56,13 +59,18 @@
         profileUrl: process.env.profileUrl
       }
     },
-    async asyncData({store, route}) {
+    async asyncData({store, route, error}) {
       let id = route.params.id;
-      await store.dispatch('user/getUser', id);
-      await store.dispatch('posts/fetchGuestUserPosts', id);
-      return {
-        other: store.state.user.other,
-        posts: store.state.posts.posts
+      try {
+        await store.dispatch('user/getUser', id);
+        await store.dispatch('posts/fetchGuestUserPosts', id);
+        return {
+          other: store.state.user.other,
+          posts: store.state.posts.posts
+        }
+      } catch (e) {
+        // return redirect({name: 'errors-user_not_found'});
+        return error({statusCOde: 404, message: 'User not found'})
       }
     }
   }

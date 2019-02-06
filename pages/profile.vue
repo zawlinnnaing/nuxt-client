@@ -40,11 +40,14 @@
       </div>
     </div>
     <hr>
-    <div class="latest-posts">
+    <div v-if="user.posts_count > 0" class="latest-posts">
       <h1 class="title">Latest posts</h1>
       <post v-for="post in posts"
             :key="post.id"
             :post="post"></post>
+    </div>
+    <div class="latest-posts" v-else>
+      <h1 class="title">You have no posts yet</h1>
     </div>
   </div>
 </template>

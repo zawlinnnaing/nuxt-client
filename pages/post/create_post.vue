@@ -19,6 +19,7 @@
         <label class="label">Body</label>
         <div class="control">
           <div :class="{'quill-editor': true, 'div-editor': true , 'has-error': hasError}"
+               ref="newEditor"
                v-model="body"
                v-quill:myQuillEditor="editorOption">
           </div>
@@ -32,25 +33,50 @@
         </div>
       </div>
     </form>
+    <form @submit.prevent
+          method="post" id="uploadFormMulti">
+      <input style="display: none" :id="inputId" type="file" name="avator" multiple
+             accept="image/*" @change="uploadImg($event)">
+    </form>
+    {{ body }}
   </div>
 </template>
 
 <script>
   import Validator from 'validatorjs';
+  import Quill from 'quill';
 
   export default {
     name: "create_post",
     head: {
       title: 'Write a post'
     },
+    ssr: false,
     middleware: ['auth', 'activeUser'],
+
+    mounted() {
+      let vm = this;
+      let imageHandler = async function (image) {
+        vm.addImgRange = vm.$refs.newEditor.__quill.getSelection();
+        if (image) {
+          let fileInput = document.getElementById(vm.inputId); //隐藏的file文本ID
+          fileInput.click() //加一个触发事件
+        }
+      };
+      this.$refs.newEditor.__quill.getModule('toolbar').addHandler('image', imageHandler);
+    },
+
     data() {
       return {
         body: '',
         title: '',
-        editorOption: {},
+        editorOption: {
+          // imageHandler: this.imageHandler
+        },
         hasError: false,
-        errorMsg: ''
+        errorMsg: '',
+        inputId: 'file-input',
+        image: ''
       }
     },
 
@@ -62,19 +88,18 @@
 
     methods: {
       createPost() {
-        let self = this;
         this.$validator.validateAll()
           .then((result) => {
-            if (result && self.validateString()) {
+            if (result && this.validateString()) {
               let payload = {
-                title: self.title,
-                body: self.body,
-                token: self.$auth.getToken('local'),
-                user_id: self.user_id
+                title: this.title,
+                body: this.body,
+                token: this.$auth.getToken('local'),
+                user_id: this.user_id
               };
-              self.$store.dispatch('posts/createPost', payload)
+              this.$store.dispatch('posts/createPost', payload)
                 .then(() => {
-                  self.$router.push({name: 'index'});
+                  this.$router.push({name: 'index'});
                 });
             }
           })
@@ -94,6 +119,30 @@
           this.errorMsg = '';
           return true;
         }
+      },
+      async uploadImg(event) {
+        let vm = this;
+        let data = {};
+        data.token = vm.$auth.getToken('local');
+        let file = event.target.files[0];
+        let reader = new FileReader();
+        reader.onload = async function () {
+          vm.image = reader.result;
+          data.image = vm.image;
+          try {
+            let imgUrl = await vm.$store.dispatch('posts/uploadPostImage', data);
+            if (imgUrl != null && imgUrl.length > 0) {
+              let value = imgUrl;
+              vm.addImgRange = vm.$refs.newEditor.__quill.getSelection();
+              value = value.indexOf('http') !== -1 ? value : 'http:' + value;
+              vm.$refs.newEditor.__quill.insertEmbed(vm.addImgRange != null ? vm.addImgRange.index : 0, 'image', value, Quill.sources.USER)
+            }
+          } catch (e) {
+            alert(e.getMessage());
+          }
+          document.getElementById(vm.inputId).value = '';
+        };
+        reader.readAsDataURL(file);
       }
     }
   }

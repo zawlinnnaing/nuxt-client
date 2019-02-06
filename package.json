@@ -22,6 +22,7 @@
     "nuxt": "^2.0.0",
     "nuxt-dropzone": "^0.2.8",
     "nuxt-validate": "^0.1.2",
+    "quill-image-extend-module": "^1.1.2",
     "socket.io-client": "^2.2.0",
     "validatorjs": "^3.15.1",
     "vee-validate": "^2.1.5",
@@ -29,7 +30,8 @@
     "vue-echo": "^1.0.2",
     "vue-editor": "^0.0.0",
     "vue-quill-editor": "^3.0.6",
-    "vuex": "latest"
+    "vuex": "latest",
+    "quill": "latest"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

@@ -80,7 +80,6 @@
     },
     methods: {
       async addUser() {
-        console.log(this.userForm.email + this.userForm.password);
         try {
           await this.$auth.login({
             data: this.userForm

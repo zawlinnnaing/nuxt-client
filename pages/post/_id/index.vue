@@ -18,7 +18,12 @@
     <div class="post-body">
       <div class="container column is-9">
         <section class="info-section">
-          <p> Author: {{ post.author }}</p>
+          <p> Author:
+            <nuxt-link :to="{name:'user-id' ,params: {id:post.user_id}}"
+                       style="color: #F5F5F5">
+              {{ post.author }}
+            </nuxt-link>
+          </p>
           <p>Written at: {{ post.created_at }}</p>
         </section>
         <div v-html="post.body" class="post-content"></div>

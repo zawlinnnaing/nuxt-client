@@ -1,5 +1,5 @@
 <template>
-  <div class="container column is-9">
+  <div class="container column is-6 is-12-mobile">
     <post v-for="post in posts"
           :key="post.id"
           :post="post"
