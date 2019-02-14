@@ -9,3 +9,18 @@ export const getters = {
     return state.user.active;
   },
 };
+
+export const mutations = {
+  increaseFollowers(state) {
+    state.user.followers_count += 1;
+  },
+  decreaseFollowers(state) {
+    state.user.followers_count -= 1;
+  },
+  increaseFollowed(state) {
+    state.user.followed_count += 1;
+  },
+  decreaseFollowed(state) {
+    state.user.followed_count -= 1;
+  }
+};

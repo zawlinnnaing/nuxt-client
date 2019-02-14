@@ -55,7 +55,8 @@ module.exports = {
   // Env property
   env: {
     profileUrl: 'http://localhost:8000/storage/profile_images/',
-    baseApiUrl: 'http://localhost:8000/api/v1/auth/'
+    baseApiUrl: 'http://localhost:8000/api/v1/auth/',
+    authStrat: 'local'
   },
   /*
   ** Build configuration

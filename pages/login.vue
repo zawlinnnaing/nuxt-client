@@ -84,11 +84,14 @@
           await this.$auth.login({
             data: this.userForm
           });
+          this.$axios.defaults.headers.common['Authorization'] = this.$auth.getToken('local');
+          this.$router.go(-1);
         } catch (e) {
-          this.hasError = true
+          this.hasError=true;
+          this.userForm.email = '';
+          this.userForm.password = '';
         }
-        this.$axios.defaults.headers.common['Authorization'] = this.$auth.getToken('local');
-        this.$router.go(-1);
+
       }
     }
   }

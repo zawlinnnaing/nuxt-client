@@ -120,14 +120,13 @@
       }
     },
     mounted() {
-      console.log(process.env.profileUrl);
     },
     methods: {
       async updateProfile() {
         let data = {
           name: this.name,
           email: this.email,
-          token: this.$auth.getToken('local'),
+          token: this.$auth.getToken(this.$auth.strategy.name),
           id: this.user.id
         };
         if (this.imageUploaded === true) {

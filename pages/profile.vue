@@ -31,15 +31,21 @@
         <h1 class="subtitle">posts</h1>
       </div>
       <div class="numbers">
-        <h1 class="title">{{ user.followers_count }}</h1>
-        <h1 class="subtitle">followers</h1>
+        <nuxt-link :to="{name: 'profile-followers'} ">
+          <h1 class="title">{{ user.followers_count }}</h1>
+          <h1 class="subtitle">followers</h1>
+        </nuxt-link>
       </div>
       <div class="numbers">
-        <h1 class="title">{{user.followed_count}}</h1>
-        <h1 class="subtitle">following</h1>
+        <nuxt-link :to="{name: 'profile-followings' }">
+          <h1 class="title">{{user.followed_count}}</h1>
+          <h1 class="subtitle">following</h1>
+        </nuxt-link>
       </div>
     </div>
     <hr>
+    <!--Follower information section-->
+    <nuxt-child :id="user.id"></nuxt-child>
     <div v-if="user.posts_count > 0" class="latest-posts">
       <h1 class="title">Latest posts</h1>
       <post v-for="post in posts"
@@ -53,7 +59,7 @@
 </template>
 
 <script>
-  import Followers from "../components/Followers";
+  import Followers from "../components/Follower";
   import Post from "../components/post";
 
   export default {

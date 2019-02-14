@@ -1,12 +1,17 @@
-
 /************************************  Page Transitions   */
 .page-enter-active, .page-leave-active {
   transition: opacity 0.5s;
 }
+
 .page-enter, .page-leave-to {
   opacity: 0;
 }
 
 .view {
   padding: 2rem 0;
+}
+
+button.following {
+  background-color: #47494e;
+  color: #F5F5F5;
 }

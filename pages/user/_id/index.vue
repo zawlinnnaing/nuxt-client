@@ -16,6 +16,11 @@
         </figure>
       </div>
     </div>
+    <div class="follow-section">
+      <div>
+        <button class="button is-success">Follow</button>
+      </div>
+    </div>
     <div class="social-info">
       <div class="numbers">
         <h1 class="title">{{ other.posts_count }}</h1>
@@ -48,6 +53,7 @@
 
   export default {
     name: "profile",
+    middleware: ['isProfile'],
     components: {Post},
     head() {
       return {
@@ -78,7 +84,7 @@
 
 <style scoped>
 
-  .profile {;
+  .profile {
     background-position: center;
     background-size: cover;
     height: 300px;
@@ -147,4 +153,7 @@
     margin: 2rem 0;
   }
 
+  div.follow-section {
+    text-align: center;
+  }
 </style>
