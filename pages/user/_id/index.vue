@@ -17,8 +17,11 @@
       </div>
     </div>
     <div class="follow-section">
-      <div>
-        <button class="button is-success">Follow</button>
+      <div v-if="hasFollowed && getFollowing($route.params.id)">
+        <button class="button following" @click="unfollow($route.params.id)">Following</button>
+      </div>
+      <div v-else>
+        <button class="button" @click="follow($route.params.id)">Follow</button>
       </div>
     </div>
     <div class="social-info">
@@ -50,26 +53,40 @@
 
 <script>
   import Post from "~/components/post";
+  import UnfollowBtn from "../../../components/buttons/UnfollowBtn";
+  import FollowBtn from "../../../components/buttons/FollowBtn";
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "profile",
     middleware: ['isProfile'],
-    components: {Post},
+    components: {FollowBtn, UnfollowBtn, Post},
     head() {
       return {
         title: this.other.name
       }
     },
+    created() {
+      console.log('testing getter');
+      console.log(this.getFollowing(this.$route.params.id))
+    },
     data() {
       return {
-        profileUrl: process.env.profileUrl
+        profileUrl: process.env.profileUrl,
+        hasFollowed: false,
       }
     },
-    async asyncData({store, route, error}) {
+    computed: {
+      ...mapGetters({
+        getFollowing: 'user/getFollowingGetter'
+      })
+    },
+    async asyncData({store, route, error, app}) {
       let id = route.params.id;
       try {
         await store.dispatch('user/getUser', id);
         await store.dispatch('posts/fetchGuestUserPosts', id);
+        await store.dispatch('user/getFollowing', app.$auth.user.id);
         return {
           other: store.state.user.other,
           posts: store.state.posts.posts
@@ -78,7 +95,43 @@
         // return redirect({name: 'errors-user_not_found'});
         return error({statusCOde: 404, message: 'User not found'})
       }
-    }
+    },
+    methods: {
+      async follow(id) {
+        if (this.$auth.loggedIn) {
+          let payload = {
+            follower_id: this.$auth.user.id,
+            followed_id: id
+          };
+          try {
+            await this.$store.dispatch('user/follow', payload);
+            this.$store.commit('user/increaseOtherFollowCount');
+            this.hasFollowed = true;
+          } catch (e) {
+            alert(e);
+          }
+        } else {
+          this.$router.push({name: 'login'});
+        }
+      },
+      async unfollow(id) {
+        if (this.$auth.loggedIn) {
+          let payload = {
+            follower_id: this.$auth.user.id,
+            followed_id: id
+          };
+          try {
+            await this.$store.dispatch('user/unfollow', payload);
+            this.$store.commit('user/decreaseOtherFollowCount');
+            this.hasFollowed = false;
+          } catch (e) {
+            alert(e);
+          }
+        } else {
+          this.$router.push({name: 'login'});
+        }
+      }
+    },
   }
 </script>
 
@@ -145,9 +198,6 @@
     padding: 1rem;
   }
 
-  div.follower-user:last-child {
-    border-bottom: 1px solid white;
-  }
 
   div.detail-info {
     margin: 2rem 0;

@@ -12,9 +12,23 @@ export const state = () => ({
   followings: []
 });
 
+export const getters = {
+  getFollowingGetter: (state) => (id) => {
+    return state.followings.find((element) => {
+      return Number(element.followed_id) === Number(id)
+    });
+  }
+};
+
 export const mutations = {
   setOther(state, data) {
     state.other = data
+  },
+  increaseOtherFollowCount(state) {
+    state.other.followers_count++;
+  },
+  decreaseOtherFollowCount(state) {
+    state.other.followers_count--;
   },
   setFollowers(state, data) {
     state.followers = data
@@ -24,25 +38,25 @@ export const mutations = {
   },
   setFollow(state, id) {
     let data = state.followers.find((element) => {
-      return element.follower_id === id
+      return Number(element.follower_id) === Number(id)
     });
     data.followed_by_user = true;
   },
   setFollowing(state, id) {
     let data = state.followings.find((element) => {
-      return element.followed_id === id
+      return Number(element.followed_id) === Number(id)
     });
     data.followed_by_user = true;
   },
   setUnfollow(state, id) {
     let data = state.followers.find((element) => {
-      return element.follower_id === id
+      return Number(element.follower_id) === Number(id)
     });
     data.followed_by_user = false;
   },
   setUnfollowing(state, id) {
     let data = state.followings.find((element) => {
-      return element.followed_id === id
+      return Number(element.followed_id) === Number(id)
     });
     data.followed_by_user = false;
   }
@@ -51,7 +65,7 @@ export const mutations = {
 export const actions = {
   testImageUpload(context, payload) {
     console.log(typeof payload.image);
-    axios({
+    this.$axios({
       method: 'post',
       url: baseUrl + 'post_image',
       data: payload
@@ -72,7 +86,7 @@ export const actions = {
       Authorization: payload.token
     };
     let url = baseUrl + 'user/' + payload.id;
-    axios({
+    this.$axios({
       method: 'put',
       headers: header,
       url: url,
@@ -83,7 +97,7 @@ export const actions = {
   async getUser(context, id) {
     console.log(id);
     let url = baseUrl + 'get_user/' + id;
-    let {data} = await axios({
+    let {data} = await this.$axios({
       method: 'get',
       url: url
     });
@@ -93,7 +107,7 @@ export const actions = {
   async getFollowers(context, id) {
     let url = baseUrl + 'followers/' + id;
     console.log(url);
-    let {data} = await axios({
+    let {data} = await this.$axios({
       method: 'get',
       url: url
     });
@@ -101,32 +115,27 @@ export const actions = {
   },
   async getFollowing(context, id) {
     let url = baseUrl + 'following/' + id;
-    let {data} = await axios({
+    let {data} = await this.$axios({
       method: 'get',
       url: url
     });
     context.commit('setFollowings', data);
   },
   async follow(context, payload) {
+    console.log('Testing this.$axios');
+    console.log(this.$axios);
     let url = baseUrl + 'follow/' + payload.follower_id + '/' + payload.followed_id;
-    let header = {
-      Authorization: payload.token
-    };
-    await axios({
+
+    await this.$axios({
       method: 'get',
       url: url,
-      headers: header,
     });
   },
   async unfollow(context, payload) {
     let url = baseUrl + 'unfollow/' + payload.follower_id + '/' + payload.followed_id;
-    let header = {
-      Authorization: payload.token
-    };
-    await axios({
+    await this.$axios({
       method: 'get',
       url: url,
-      headers: header,
     });
   }
 };

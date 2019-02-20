@@ -2,17 +2,23 @@
   <div class="follower-user">
     <p class="subtitle">{{following.followed_name}} </p>
     <div v-if="following.followed_by_user">
-      <button :class="{'button' : true, 'following': 'true'}" @click="unfollow()">Following</button>
+      <unfollow-btn :id="following.followed_id"
+                    :isFollowing="true"></unfollow-btn>
     </div>
     <div v-else>
-      <button class="button" @click="follow()">Follow</button>
+      <follow-btn :id="following.followed_id"
+                  :isFollowing="true"></follow-btn>
     </div>
   </div>
 </template>
 
 <script>
+  import FollowBtn from "./buttons/FollowBtn";
+  import UnfollowBtn from "./buttons/UnfollowBtn";
+
   export default {
     name: "Following",
+    components: {UnfollowBtn, FollowBtn},
     props: ['following'],
     data() {
       return {

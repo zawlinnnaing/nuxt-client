@@ -15,3 +15,8 @@ button.following {
   background-color: #47494e;
   color: #F5F5F5;
 }
+
+button.following:hover {
+  background-color: #47494e !Important;
+  color: #F5F5F5 !important;
+}
